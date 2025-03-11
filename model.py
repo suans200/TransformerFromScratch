@@ -63,7 +63,7 @@ class LayerNormalization(nn.Module):
     def forward(self, x):
         mean = x.min(dim = -1, keepdim = True) #  batch, sequencelength,1
         std = x.std(dim = -1, keepdim = True) # batch, sequencelength, 1
-        return self.alpha @ (x-min)/ (std+self.eps) + self.bias
+        return self.alpha @ (x-mean)/ (std+self.eps) + self.bias
 
 class MultiHeadAttentionBlock(nn.Module):
     def __init__(self, d_model:int, h:int, dropout:float)->None:
@@ -133,7 +133,7 @@ class EncoderBlock(nn.Module):
     
 
 class Encoder(nn.Module):
-    def __init__(self, features:int, layers:int)->None:
+    def __init__(self, features:int, layers:nn.ModuleList)->None:
         super().__init__()
         self.norm = LayerNormalization(features=features)
         self.layers = layers
@@ -168,7 +168,7 @@ class Decoder(nn.Module):
 
     def forward(self, x, encoder_output, src_mask, tgt_mask):
         for layer in self.layers:
-            x = layer(x, encoder_output, src_mask, tgt_mask)
+            x = layer(x, tgt_mask, src_mask, encoder_output)
         return self.norm(x)
 
 class ProjectionLayer(nn.Module):
