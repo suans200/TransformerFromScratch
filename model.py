@@ -41,7 +41,7 @@ class LayerNormalization(nn.Module):
         return self.alpha*(x-mean) / self.bias+std+self.eps
 
 class FeedForwardBlock(nn.Module):
-    def __init__(self, d_model:int, dff:int, dropout:float):
+    def __init__(self, d_model:int, dff:int, dropout:float)->None:
         super().__init__()
         self.linear1 = nn.Linear(d_model, dff)
         self.dropout = dropout
@@ -51,7 +51,7 @@ class FeedForwardBlock(nn.Module):
         return self.linear2(self.dropout(self.linear1(x)))
 
 class MultiHeadAttentionBlock(nn.Module):
-    def __init__(self, d_model: int, h:int, dropout:float):
+    def __init__(self, d_model: int, h:int, dropout:float)->None:
         super().__init__()
         self.d_model = d_model
         self.h = h
@@ -99,7 +99,7 @@ class ResidualConnection(nn.Module):
         return x+self.dropout(sublayer(self.norm(x)))
 
 class Encoder_Block(nn.Module):
-    def __init__(self, features, dropout, self_attention_block:MultiHeadAttentionBlock, feed_forward_block:FeedForwardBlock):
+    def __init__(self, features, dropout, self_attention_block:MultiHeadAttentionBlock, feed_forward_block:FeedForwardBlock)->None:
         super().__init__()
         self.self_attention_block = self_attention_block
         self.feed_forward_block = feed_forward_block
@@ -110,7 +110,7 @@ class Encoder_Block(nn.Module):
         return x
 
 class Encoder(nn.Module):
-    def __init__(self, layers: nn.ModuleList, features):
+    def __init__(self, layers: nn.ModuleList, features)->None:
         super().__init__()
         self.layers = layers
         self.norm = LayerNormalization(features=features)
@@ -121,7 +121,7 @@ class Encoder(nn.Module):
         return self.norm(x)
 
 class DecoderBlock(nn.Module):
-    def __init__(self,features, dropout, self_attention_block: MultiHeadAttentionBlock, cross_attention_block:MultiHeadAttentionBlock, feed_forward_block:FeedForwardBlock):
+    def __init__(self,features, dropout, self_attention_block: MultiHeadAttentionBlock, cross_attention_block:MultiHeadAttentionBlock, feed_forward_block:FeedForwardBlock)->None:
         super().__init__()
         self.features = features
         self.self_attention_block = self_attention_block
@@ -135,7 +135,7 @@ class DecoderBlock(nn.Module):
         return x
 
 class Decoder(nn.Module):
-    def __init__(self, layers : nn.ModuleList, features):
+    def __init__(self, layers : nn.ModuleList, features)->None:
         super().__init__()
         self.layers = layers
         self.features = features
@@ -146,14 +146,14 @@ class Decoder(nn.Module):
         return self.norm(x)
 
 class ProjectionLayer():
-    def __init__(self, d_model:int, vocab_size:int):
+    def __init__(self, d_model:int, vocab_size:int)->None:
         super().__init__()
         self.projection = nn.Linear(d_model, vocab_size)
     def forward(self, x):
         return self.projection(x)
 
 class Transformer(nn.Module):
-    def __init__(self, src_embeddings:InputEmbeddings, tgt_embedidngs:InputEmbeddings, src_pos:PositionalEncoding, tgt_pos:PositionalEncoding, projection:ProjectionLayer):
+    def __init__(self, src_embeddings:InputEmbeddings, tgt_embedidngs:InputEmbeddings, src_pos:PositionalEncoding, tgt_pos:PositionalEncoding, projection:ProjectionLayer)->None:
         super().__init__()
         self.src_embedding = src_embeddings
         self.tgt_embedding = tgt_embedidngs
