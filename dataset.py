@@ -61,8 +61,8 @@ class BilingualDataset(Dataset):
         return {
             "encoder_input": encoder_input, 
             "decoder_input": decoder_input,  
-            "encoder_mask": (encoder_input != self.pad_token).unsqueeze(0).unsqueeze(0).int(), 
-            "decoder_mask": (decoder_input != self.pad_token).unsqueeze(0).int() & causal_mask(decoder_input.size(0)), 
+            "encoder_mask": (encoder_input != self.pad_tokenized).unsqueeze(0).unsqueeze(0).int(), 
+            "decoder_mask": (decoder_input != self.pad_tokenized).unsqueeze(0).int() & causal_mask(decoder_input.size(0)), 
             "label": labels,  
             "src_text": src_text,
             "tgt_text": tgt_text,
